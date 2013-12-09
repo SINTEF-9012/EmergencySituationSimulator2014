@@ -4,6 +4,8 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Globalization;
 using System.Threading;
+using EmergencySituationSimulator2013.Model;
+using EmergencySituationSimulator2013.Visitors;
 
 namespace EmergencySituationSimulator2013
 {
@@ -13,6 +15,16 @@ namespace EmergencySituationSimulator2013
         {
             Console.WriteLine("BridgeSimpleSimulator");
 
+            for (var i = 0; i < 10; ++i)
+            {
+                new PoliceCar();
+            }
+            new FireTruck();
+
+            var visitor = new TextDebugVisitor();
+
+            Entity.VisitAll(visitor);
+                return;
             // Load settings
             NameValueCollection appSettings = ConfigurationManager.AppSettings;
 
@@ -38,8 +50,8 @@ namespace EmergencySituationSimulator2013
 
             // Create entities
 
-            var patients = new List<Entity>(patientsNumber);
-            //var resources = new List<Entity>(resourcesNumber);
+            var patients = new List<OLdEntity>(patientsNumber);
+            //var resources = new List<OLdEntity>(resourcesNumber);
             var groups = new List<Group>(patientsGroupsNumber + resourcesGroupsNumber);
 
             Group currentGroup = null;
@@ -63,10 +75,11 @@ namespace EmergencySituationSimulator2013
                     groups.Add(currentGroup);
                 }
 
-                var patient = new Entity(Math.Abs(random.NextGaussianDouble(speedInsideGroup, speedInsideGroup)));
+                var patient = new OLdEntity(Math.Abs(random.NextGaussianDouble(speedInsideGroup, speedInsideGroup)));
 
                 // Place the patient on the area
                 patient.location.lat = currentLocation.lat;
+
                 patient.location.lng = currentLocation.lng;
                 patient.location.Move(random.NextDouble()*360.0, random.NextGaussianDouble(currentGroup.entities.Count*2+5, currentGroup.entities.Count+10));
 
@@ -86,7 +99,7 @@ namespace EmergencySituationSimulator2013
                 {
                     group.Move(random, 0.08);
                 }
-                foreach (Entity patient in patients)
+                foreach (OLdEntity patient in patients)
                 {
                     patient.Move(random, 0.08);
                 }
