@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Globalization;
 using System.Threading;
+using EmergencySituationSimulator2013.API;
 using EmergencySituationSimulator2013.Model;
 using EmergencySituationSimulator2013.Visitors;
 
@@ -19,9 +20,9 @@ namespace EmergencySituationSimulator2013
             NameValueCollection appSettings = ConfigurationManager.AppSettings;
 
             // Setting up the Oracle
-            Oracle.Generator = Random.fromSeed(appSettings["seed"]);
+            Oracle.Generator = Random.fromSeed(appSettings["seed"]+"canard");
             Oracle.Center = new Location(appSettings["locationCenter"]);
-            int.TryParse(appSettings["areaRadius"], out Oracle.AreaRadius);
+            double.TryParse(appSettings["areaRadius"], out Oracle.AreaRadius);
             
 
             for (var i = 0; i < 10; ++i)
@@ -37,7 +38,39 @@ namespace EmergencySituationSimulator2013
 
 
             Entity.VisitAll(visitor);
-                return;
+
+
+            HereRoute.AppId = "UagcOxvkfpYoMLqLIMim";
+            HereRoute.AppCode = "P448_k68ZS0v0FkLaa0f7Q";
+
+            var fireTruck = new FireTruck();
+
+            var path = new HereRoute(Oracle.CreateLocation(), Oracle.CreateLocation());
+
+            var fireTruckPilot = new LocationPilot(path.Route, fireTruck);
+            fireTruckPilot.MaxSpeed = 392.5;
+
+            var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);
+
+            var hack = new OLdEntity();
+            var patients = new List<OLdEntity>();
+            patients.Add(hack);
+            
+            transmission.init(patients);
+
+            var timer = new Timer(delegate
+            {
+                fireTruckPilot.Tick(0.08);
+                hack.location.lat = fireTruck.Location.lat;
+                hack.location.lng = fireTruck.Location.lng;
+
+                Console.WriteLine(fireTruck.Location);
+
+                transmission.update(patients);
+            }, null, 0, 300);
+            
+            Thread.Sleep(1000000);
+            return;
             // Load settings
             /*NameValueCollection appSettings = ConfigurationManager.AppSettings;
 

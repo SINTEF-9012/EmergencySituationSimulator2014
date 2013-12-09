@@ -63,6 +63,7 @@
     <Compile Include="API\HereRoute.cs" />
     <Compile Include="API\RouteResponseType.cs" />
     <Compile Include="API\RouteType.cs" />
+    <Compile Include="LocationPilot.cs" />
     <Compile Include="Model\FireMan.cs" />
     <Compile Include="Model\FireTruck.cs" />
     <Compile Include="Model\Person.cs" />

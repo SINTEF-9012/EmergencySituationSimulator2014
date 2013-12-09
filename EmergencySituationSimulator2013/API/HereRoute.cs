@@ -31,7 +31,7 @@ namespace EmergencySituationSimulator2013.API
                 (pedestrian ? "pedestrian" : "car")+
                 ";traffic:disabled");
 
-            // We want just the shapes
+            // We just want the shapes
             request.AddParameter("routeattributes", "shape");
             request.AddParameter("maneuverattributes", "none");
             request.AddParameter("linkattributes", "none");
