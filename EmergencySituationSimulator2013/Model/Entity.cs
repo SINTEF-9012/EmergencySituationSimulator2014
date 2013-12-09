@@ -37,5 +37,7 @@ namespace EmergencySituationSimulator2013.Model
                 instance.Accept(visitor);
             }
         }
+
+
     }
 }

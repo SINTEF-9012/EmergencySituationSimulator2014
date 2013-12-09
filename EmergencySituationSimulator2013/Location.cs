@@ -8,18 +8,23 @@ namespace EmergencySituationSimulator2013
         public double lat;
         public double lng;
 
-
-        public static Location fromString(string location)
+        public Location()
         {
-            var newLocation = new Location();
+            
+        }
 
+        public Location(Location copy)
+        {
+            this.lat = copy.lat;
+            this.lng = copy.lng;
+        }
+
+        public Location(string location)
+        {
             string[] tab = location.Split(',');
-
-
-            double.TryParse(tab[0], NumberStyles.Any, CultureInfo.InvariantCulture, out newLocation.lat);
-            double.TryParse(tab[1], NumberStyles.Any, CultureInfo.InvariantCulture, out newLocation.lng);
-
-            return newLocation;
+            
+            double.TryParse(tab[0], NumberStyles.Any, CultureInfo.InvariantCulture, out this.lat);
+            double.TryParse(tab[1], NumberStyles.Any, CultureInfo.InvariantCulture, out this.lng);
         }
 
         public override string ToString()

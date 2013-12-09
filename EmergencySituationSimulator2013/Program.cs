@@ -15,18 +15,31 @@ namespace EmergencySituationSimulator2013
         {
             Console.WriteLine("BridgeSimpleSimulator");
 
+            // Load settings
+            NameValueCollection appSettings = ConfigurationManager.AppSettings;
+
+            // Setting up the Oracle
+            Oracle.Generator = Random.fromSeed(appSettings["seed"]);
+            Oracle.Center = new Location(appSettings["locationCenter"]);
+            int.TryParse(appSettings["areaRadius"], out Oracle.AreaRadius);
+            
+
             for (var i = 0; i < 10; ++i)
             {
                 new PoliceCar();
             }
             new FireTruck();
+            new Patient();
+            new Zombie();
 
             var visitor = new TextDebugVisitor();
+
+
 
             Entity.VisitAll(visitor);
                 return;
             // Load settings
-            NameValueCollection appSettings = ConfigurationManager.AppSettings;
+            /*NameValueCollection appSettings = ConfigurationManager.AppSettings;
 
             int areaRadius, patientsNumber, patientsGroupsNumber, resourcesNumber, resourcesGroupsNumber;
 
@@ -114,7 +127,7 @@ namespace EmergencySituationSimulator2013
             {
                 
                 transmission.update(patients);
-            } while (!Console.ReadLine().Contains("exit"));
+            } while (!Console.ReadLine().Contains("exit"));*/
         }
     }
 }

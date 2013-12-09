@@ -2,7 +2,7 @@
 
 namespace EmergencySituationSimulator2013
 {
-    public class Entity
+    public class OLdEntity
     {
         public Location location { get; private set; }
 
@@ -13,7 +13,7 @@ namespace EmergencySituationSimulator2013
 
         public object content;
 
-        public Entity(double speedRatio = 1.0)
+        public OLdEntity(double speedRatio = 1.0)
         {
             ID = Guid.NewGuid();
             sID = ID.ToString("D");
@@ -22,7 +22,7 @@ namespace EmergencySituationSimulator2013
             motion = new Motion(speedRatio);
         }
 
-        /*public delegate void CommitEventHandler(Entity entity);
+        /*public delegate void CommitEventHandler(OLdEntity entity);
 
         public event CommitEventHandler CommitEvent;
 

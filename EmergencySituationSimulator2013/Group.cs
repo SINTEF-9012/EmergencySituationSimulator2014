@@ -7,13 +7,13 @@ namespace EmergencySituationSimulator2013
 {
     class Group
     {
-        public List<Entity> entities { get; private set; }
+        public List<OLdEntity> entities { get; private set; }
 
         public Motion motion { get; private set; }
 
         public Group(double speedRatio = 1.0)
         {
-            entities = new List<Entity>();
+            entities = new List<OLdEntity>();
             motion = new Motion(speedRatio);
         }
 
@@ -26,9 +26,9 @@ namespace EmergencySituationSimulator2013
             }
         }
 
-        public void AddEntity(Entity entity)
+        public void AddEntity(OLdEntity oLdEntity)
         {
-            entities.Add(entity);
+            entities.Add(oLdEntity);
         }
     }
 }

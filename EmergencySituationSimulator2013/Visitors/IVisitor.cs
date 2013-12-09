@@ -2,9 +2,11 @@
 
 namespace EmergencySituationSimulator2013.Visitors
 {
-    interface IVisitor
+    internal interface IVisitor
     {
         void Visit(Entity e);
         void Visit(WheeledVehicle v);
+        void Visit(Patient v);
+        void Visit(Zombie z);
     }
 }

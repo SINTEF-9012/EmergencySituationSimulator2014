@@ -8,11 +8,17 @@ namespace EmergencySituationSimulator2013.Visitors
 {
     class TextDebugVisitor : IVisitor
     {
-        private StringBuilder _sb = new StringBuilder();
+        private readonly StringBuilder Sb = new StringBuilder();
 
         private void AppendLocation(Entity e)
         {
-            _sb.Append(e.Location.ToString());
+            Sb.Append(e.Location.ToString());
+        }
+
+        private void Print()
+        {
+            Console.WriteLine(Sb);
+            Sb.Clear();
         }
 
         public void Visit(Entity e)
@@ -22,13 +28,25 @@ namespace EmergencySituationSimulator2013.Visitors
 
         public void Visit(WheeledVehicle v)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("WheeledVehicule: ");
-            sb.Append(v.Id);
-            sb.Append(" ");
+            Sb.Append("WheeledVehicule: ");
+            Sb.Append(v.Id);
+            Sb.Append(" ");
             AppendLocation(v);
-            Console.WriteLine(sb);
-            sb.Clear();
+            Print();
+        }
+
+        public void Visit(Patient v)
+        {
+            Sb.Append("Victim: ");
+            Sb.Append(v.Name);
+            Print();
+        }
+
+        public void Visit(Zombie z)
+        {
+            Sb.Append("Zombie: ");
+            Sb.Append(z.Name);
+            Print();
         }
     }
 }
