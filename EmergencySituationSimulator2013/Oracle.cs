@@ -9,14 +9,14 @@ namespace EmergencySituationSimulator2013
     {
         public static Random Generator;
         public static Location Center;
-        public static int AreaRadius;
+        public static double AreaRadius;
 
         public static Location CreateLocation()
         {
             var location = new Location(Center);
 
             location.Move(Generator.NextDouble()*360.0,
-                Generator.NextGaussianDouble(AreaRadius/2, AreaRadius/4));
+                Generator.NextGaussianDouble(AreaRadius/2.0, AreaRadius/4.0));
 
             return location;
         }
