@@ -62,5 +62,58 @@ namespace EmergencySituationSimulator2013
             this.lat = lat2;
             this.lng = lng2;
         }
+
+        /**
+         * Distance between two GPS points.
+         *
+         * Adapted algorithm from JOSM, an OpenStreetMap editor.
+         *
+         * Use Haversine method behind.
+         *
+         * @return Distance
+         */
+        public double DistanceTo(Location point)
+        {
+            const double R = 6378137.0;
+            const double toRadian = (Math.PI / 180.0);
+
+            double sinHalfLat = Math.Sin(toRadian * (point.lat - this.lat) / 2);
+            double sinHalfLon = Math.Sin(toRadian * (point.lng - this.lng) / 2);
+            double d = 2
+                            * R
+                            * Math.Asin(Math.Sqrt(sinHalfLat * sinHalfLat
+                                            + Math.Cos(this.lat * toRadian)
+                                            * Math.Cos(point.lat * toRadian) * sinHalfLon
+                                            * sinHalfLon));
+            // For points opposite to each other on the sphere,
+            // rounding errors could make the argument of asin greater than 1
+            // (This should almost never happen.)
+            if (double.IsNaN(d))
+            {
+                Console.WriteLine("Error: NaN in greatCircleDistance");
+                d = Math.PI * R;
+            }
+            
+            return d;
+        }
+
+        /**
+         * Angle of a 3 points curve.
+         *
+         * Using Al-Kashi theorem
+         *
+         * @return Angle in degree
+         */
+        public static double Angle(Location A, Location B, Location C)
+        {
+            const double toDegree = (180.0/Math.PI);
+
+            double lA = A.DistanceTo(B);
+            double lB = B.DistanceTo(C);
+            double lC = C.DistanceTo(A);
+
+            return 180 - toDegree * (Math.Acos((lA * lA + lB * lB - lC * lC)
+                            / (2 * lA * lB)));
+        }
     }
 }
