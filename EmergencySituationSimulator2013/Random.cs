@@ -20,9 +20,8 @@ namespace EmergencySituationSimulator2013
                 int iSeed = 0, cpt = 0;
                 foreach (char c in seed)
                 {
-                    iSeed = c*(iSeed << ++cpt);
+                    iSeed = c*(c + (iSeed >> ++cpt));
                 }
-
                 return new Random(iSeed);
             }
             return new Random();
