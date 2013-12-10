@@ -25,7 +25,7 @@ namespace EmergencySituationSimulator2013
         // In meters
         // The distance between the previous waypoint
         // and the next waypoint
-        protected double SegmentLength = 1;
+        protected double SegmentLength = 0;
 
         // In meters
         protected double CurrentDistance = 0;
@@ -44,10 +44,13 @@ namespace EmergencySituationSimulator2013
             }
 
             NextSegment();
+
+            CurrentSpeed = 0.0;
         }
 
         protected void NextSegment()
         {
+
             if (SegmentIndex >= Route.Count-1)
             {
                 CurrentDistance = SegmentLength;
@@ -55,23 +58,49 @@ namespace EmergencySituationSimulator2013
             }
             else
             {
-                PreviousWayPoint = Route[SegmentIndex];
-                NextWayPoint = Route[++SegmentIndex];
+                if (SegmentIndex == 0)
+                {
+                    CurrentSpeed = 0.0;
+                    CurrentDistance = 0.0;
+                    PreviousWayPoint = Route[0];
+                    NextWayPoint = Route[1];
+                    SegmentLength = PreviousWayPoint.DistanceTo(NextWayPoint);
+                    SegmentIndex = 1;
+                }
+                else
+                {
+                    var currentWayPoint = Route[SegmentIndex];
+                    NextWayPoint = Route[++SegmentIndex];
 
-                CurrentDistance = 0.0;
+                    var angleCurve = Location.Angle(PreviousWayPoint, currentWayPoint, NextWayPoint);
+                    PreviousWayPoint = currentWayPoint;
 
-                SegmentLength = PreviousWayPoint.DistanceTo(NextWayPoint);    
+                    // Too much simple deceleration model :-)
+                    var angleFactor = 1 - (angleCurve / 180.0);
+                    
+                    if (double.IsNaN(angleFactor))
+                    {
+                        angleFactor = 1.0;
+                    }
+
+                    CurrentSpeed *= angleFactor*angleFactor;
+
+                    CurrentDistance = CurrentDistance - SegmentLength;
+
+                    SegmentLength = PreviousWayPoint.DistanceTo(NextWayPoint);    
+                }
+               
             }
         }
         
         public void Tick(double time)
         {
-            // Very quick implementation
-            CurrentSpeed = MaxSpeed;
+            // Very simple acceleration model
+            CurrentSpeed = CurrentSpeed + ((MaxSpeed-CurrentSpeed)/8)*time;
 
             CurrentDistance += CurrentSpeed*time;
 
-            if (CurrentDistance > SegmentLength)
+            while (CurrentDistance > SegmentLength)
             {
                 NextSegment();
             }
