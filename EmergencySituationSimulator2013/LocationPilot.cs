@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EmergencySituationSimulator2013.Model;
 
 namespace EmergencySituationSimulator2013
@@ -21,6 +22,10 @@ namespace EmergencySituationSimulator2013
         protected Location PreviousWayPoint;
 
         protected Location NextWayPoint;
+
+        // 1 is a 0 degree curve
+        // 0 is a U-Turn
+        protected double FactorNextCurve;
 
         // In meters
         // The distance between the previous waypoint
@@ -48,6 +53,29 @@ namespace EmergencySituationSimulator2013
             CurrentSpeed = 0.0;
         }
 
+        protected void ComputeFactorNextCurve()
+        {
+            if (SegmentIndex+1 >= Route.Count)
+            {
+                FactorNextCurve = 1.0;
+            }
+            else
+            {
+                var angleCurve = Location.Angle(PreviousWayPoint, NextWayPoint, Route[SegmentIndex+1]);
+
+                // Too much simple deceleration model :-)
+                var angleFactor = 1 - (angleCurve / 180.0);
+
+                if (double.IsNaN(angleFactor))
+                {
+                    angleFactor = 1.0;
+                }
+
+                FactorNextCurve = angleFactor*angleFactor;
+            }
+            
+        }
+
         protected void NextSegment()
         {
 
@@ -66,24 +94,17 @@ namespace EmergencySituationSimulator2013
                     NextWayPoint = Route[1];
                     SegmentLength = PreviousWayPoint.DistanceTo(NextWayPoint);
                     SegmentIndex = 1;
+                    ComputeFactorNextCurve();
                 }
                 else
                 {
-                    var currentWayPoint = Route[SegmentIndex];
+                    CurrentSpeed *= FactorNextCurve;
+
+                    PreviousWayPoint = Route[SegmentIndex];
                     NextWayPoint = Route[++SegmentIndex];
+                    ComputeFactorNextCurve();
 
-                    var angleCurve = Location.Angle(PreviousWayPoint, currentWayPoint, NextWayPoint);
-                    PreviousWayPoint = currentWayPoint;
-
-                    // Too much simple deceleration model :-)
-                    var angleFactor = 1 - (angleCurve / 180.0);
                     
-                    if (double.IsNaN(angleFactor))
-                    {
-                        angleFactor = 1.0;
-                    }
-
-                    CurrentSpeed *= angleFactor*angleFactor;
 
                     CurrentDistance = CurrentDistance - SegmentLength;
 
@@ -95,8 +116,29 @@ namespace EmergencySituationSimulator2013
         
         public void Tick(double time)
         {
-            // Very simple acceleration model
-            CurrentSpeed = CurrentSpeed + ((MaxSpeed-CurrentSpeed)/8)*time;
+            double ratioAcceleration = Oracle.CreateNumber(8.0,4.0);
+            if (ratioAcceleration < 0.0 || ratioAcceleration > 12.0)
+            {
+                ratioAcceleration = 8.0;
+            }
+            
+            // If we can accelerate
+            if (SegmentLength-CurrentDistance > 2*CurrentSpeed*(1-FactorNextCurve))
+            {
+                // Very simple acceleration model
+                CurrentSpeed += ((MaxSpeed - CurrentSpeed) / ratioAcceleration) * time;
+            }
+            else
+            {
+                var maxCurveSpeed = MaxSpeed*FactorNextCurve;
+                CurrentSpeed -= ((CurrentSpeed - maxCurveSpeed) / ratioAcceleration) * time;
+            }
+
+            // A negative speed isn't a solution
+            if (CurrentSpeed < 0)
+            {
+                CurrentSpeed = 0;
+            }
 
             CurrentDistance += CurrentSpeed*time;
 

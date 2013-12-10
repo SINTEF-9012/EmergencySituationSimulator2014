@@ -20,7 +20,7 @@ namespace EmergencySituationSimulator2013
             NameValueCollection appSettings = ConfigurationManager.AppSettings;
 
             // Setting up the Oracle
-            Oracle.Generator = Random.fromSeed(appSettings["seed"]+"canard");
+            Oracle.Generator = Random.fromSeed(appSettings["seed"]);
             Oracle.Center = new Location(appSettings["locationCenter"]);
             double.TryParse(appSettings["areaRadius"], out Oracle.AreaRadius);
             
@@ -48,7 +48,7 @@ namespace EmergencySituationSimulator2013
             var path = new HereRoute(Oracle.CreateLocation(), Oracle.CreateLocation());
 
             var fireTruckPilot = new LocationPilot(path.Route, fireTruck);
-            fireTruckPilot.MaxSpeed = 392.5;
+            fireTruckPilot.MaxSpeed = 300.5;
 
             var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);
 
@@ -60,16 +60,20 @@ namespace EmergencySituationSimulator2013
 
             var timer = new Timer(delegate
             {
-                fireTruckPilot.Tick(0.08);
-                hack.location.lat = fireTruck.Location.lat;
-                hack.location.lng = fireTruck.Location.lng;
+                if (!fireTruckPilot.AtDestination)
+                {
+                    fireTruckPilot.Tick(0.08);
+                    hack.location.lat = fireTruck.Location.lat;
+                    hack.location.lng = fireTruck.Location.lng;
 
-                Console.WriteLine(fireTruck.Location);
+                    Console.WriteLine(fireTruck.Location+" - " +fireTruckPilot.CurrentSpeed);
 
-                transmission.update(patients);
+                    transmission.update(patients);
+                }
+
             }, null, 0, 300);
             
-            Thread.Sleep(1000000);
+            Thread.Sleep(Timeout.Infinite);
             return;
             // Load settings
             /*NameValueCollection appSettings = ConfigurationManager.AppSettings;
