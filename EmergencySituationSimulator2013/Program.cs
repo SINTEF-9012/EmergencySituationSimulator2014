@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Globalization;
 using System.Threading;
-using EmergencySituationSimulator2013.API;
+using EmergencySituationSimulator2013.HereAPI;
 using EmergencySituationSimulator2013.Model;
 using EmergencySituationSimulator2013.Visitors;
 
@@ -47,7 +47,7 @@ namespace EmergencySituationSimulator2013
 
             var path = new HereRoute(Oracle.CreateLocation(), Oracle.CreateLocation());
 
-            var fireTruckPilot = new LocationPilot(path.Route, fireTruck);
+            var fireTruckPilot = new LocationPilot(fireTruck, path.Route, path.Speeds);
             fireTruckPilot.MaxSpeed = 300.5;
 
             var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);

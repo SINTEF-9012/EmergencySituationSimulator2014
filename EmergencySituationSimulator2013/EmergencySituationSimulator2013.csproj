@@ -59,10 +59,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\HereResponse.cs" />
-    <Compile Include="API\HereRoute.cs" />
-    <Compile Include="API\RouteResponseType.cs" />
-    <Compile Include="API\RouteType.cs" />
+    <Compile Include="HereAPI\GeoCoordinateType.cs" />
+    <Compile Include="HereAPI\HereResponse.cs" />
+    <Compile Include="HereAPI\HereRoute.cs" />
+    <Compile Include="HereAPI\ManeuverType.cs" />
+    <Compile Include="HereAPI\RouteLegType.cs" />
+    <Compile Include="HereAPI\RouteResponseType.cs" />
+    <Compile Include="HereAPI\RouteType.cs" />
     <Compile Include="LocationPilot.cs" />
     <Compile Include="Model\FireMan.cs" />
     <Compile Include="Model\FireTruck.cs" />
@@ -90,7 +93,9 @@
     <Compile Include="Visitors\TextDebugVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Transmission\messages.proto" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace EmergencySituationSimulator2013
@@ -31,7 +32,6 @@ namespace EmergencySituationSimulator2013
         {
             return "" + lat + " " + lng;
         }
-
 
         public void Move(double bearing, double distance)
         {
@@ -114,6 +114,22 @@ namespace EmergencySituationSimulator2013
 
             return 180 - toDegree * (Math.Acos((lA * lA + lB * lB - lC * lC)
                             / (2 * lA * lB)));
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as Location;
+            if (other == null)
+            {
+                return false;
+            }
+            return Math.Abs(lat - other.lat) < double.Epsilon &&
+               Math.Abs(lng - other.lng) < double.Epsilon;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int) (Math.Round(lat*10000) + Math.Round(lng*10000)*100000);
         }
     }
 }

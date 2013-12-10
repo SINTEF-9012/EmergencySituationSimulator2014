@@ -7,6 +7,7 @@ namespace EmergencySituationSimulator2013
     class LocationPilot
     {
         protected List<Location> Route;
+        public Dictionary<Location, double> Speeds;
 
         public List<Entity> Passengers { get; protected set; }
 
@@ -38,9 +39,10 @@ namespace EmergencySituationSimulator2013
         // Current segment inde
         protected int SegmentIndex = 0;
 
-        public LocationPilot(List<Location> route, Entity firstPassenger = null)
+        public LocationPilot(Entity firstPassenger, List<Location> route, Dictionary<Location, double> speeds)
         {
             Route = route;
+            Speeds = speeds;
             Passengers = new List<Entity>();
 
             if (firstPassenger != null)
@@ -51,6 +53,9 @@ namespace EmergencySituationSimulator2013
             NextSegment();
 
             CurrentSpeed = 0.0;
+
+            // Default max speed (doesn't need to be used but I prefer some security)
+            MaxSpeed = 20.0;
         }
 
         protected void ComputeFactorNextCurve()
@@ -111,6 +116,12 @@ namespace EmergencySituationSimulator2013
                     SegmentLength = PreviousWayPoint.DistanceTo(NextWayPoint);    
                 }
                
+                // Only some waypoints contains speeds informations
+                if (Speeds.ContainsKey(PreviousWayPoint))
+                {
+                    MaxSpeed = Speeds[PreviousWayPoint]*10;
+                    Console.WriteLine("Vitesseee: " + MaxSpeed);
+                }
             }
         }
         
@@ -123,10 +134,10 @@ namespace EmergencySituationSimulator2013
             }
             
             // If we can accelerate
-            if (SegmentLength-CurrentDistance > 2*CurrentSpeed*(1-FactorNextCurve))
+            if (SegmentLength-CurrentDistance > 6*CurrentSpeed*(1-FactorNextCurve))
             {
                 // Very simple acceleration model
-                CurrentSpeed += ((MaxSpeed - CurrentSpeed) / ratioAcceleration) * time;
+                CurrentSpeed += (Math.Abs(MaxSpeed - CurrentSpeed) / ratioAcceleration) * time;
             }
             else
             {

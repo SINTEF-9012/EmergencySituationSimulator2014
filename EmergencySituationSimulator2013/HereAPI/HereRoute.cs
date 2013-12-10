@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using RestSharp;
 
-namespace EmergencySituationSimulator2013.API
+namespace EmergencySituationSimulator2013.HereAPI
 {
     class HereRoute
     {
@@ -15,7 +15,8 @@ namespace EmergencySituationSimulator2013.API
         public static string AppCode;
 
         public IRestResponse<HereResponse> Response { get; protected set; }
-        public List<Location> Route { get; protected set; } 
+        public List<Location> Route { get; protected set; }
+        public Dictionary<Location, double> Speeds { get; protected set; } 
 
         public HereRoute(Location from, Location to, bool pedestrian = false)
         {
@@ -34,10 +35,10 @@ namespace EmergencySituationSimulator2013.API
                                          ";traffic:disabled;tollroad:-1");
 
             // We just want the shapes
-            request.AddParameter("routeattributes", "shape");
-            request.AddParameter("maneuverattributes", "none");
+            request.AddParameter("routeattributes", "shape,legs");
+            request.AddParameter("maneuverattributes", "travelTime");
+            request.AddParameter("legattributes", "travelTime");
             request.AddParameter("linkattributes", "none");
-            request.AddParameter("legattributes", "none");
 
             // First character of identifiers in uppercase
             request.AddParameter("jsonAttributes", "0");
@@ -59,6 +60,22 @@ namespace EmergencySituationSimulator2013.API
                 Route = Response.Data.Response.Route.First().Shape.Select(
                     location => new Location(location)
                 ).ToList();
+
+                Speeds = new Dictionary<Location, double>();
+
+                foreach (RouteLegType routeLeg in Response.Data.Response.Route.First().Leg)
+                {
+                    foreach (ManeuverType maneuver in routeLeg.Maneuver)
+                    {
+                        var location = new Location
+                            {
+                                lat = maneuver.Position.Latitude,
+                                lng = maneuver.Position.Longitude
+                            };
+                        var speed = maneuver.Length/maneuver.TravelTime;
+                        Speeds.Add(location, speed);
+                    }
+                }
             }
             catch (Exception e)
             {
