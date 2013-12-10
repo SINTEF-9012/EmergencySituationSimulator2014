@@ -27,9 +27,11 @@ namespace EmergencySituationSimulator2013.API
             request.AddParameter("app_code", AppCode);
 
             // Pedestrian or car
-            request.AddParameter("mode", "fastest;"+
-                (pedestrian ? "pedestrian" : "car")+
-                ";traffic:disabled");
+            request.AddParameter("mode", "fastest;" +
+                                         (pedestrian ? "pedestrian" : "car") +
+
+                                         // tollroad are not funny and public transports are disabled
+                                         ";traffic:disabled;tollroad:-1");
 
             // We just want the shapes
             request.AddParameter("routeattributes", "shape");
