@@ -73,7 +73,7 @@ namespace EmergencySituationSimulator2013.HereAPI
                                 lng = maneuver.Position.Longitude
                             };
                         var speed = maneuver.Length/maneuver.TravelTime;
-                        Speeds.Add(location, speed);
+                        Speeds[location] = speed;
                     }
                 }
             }

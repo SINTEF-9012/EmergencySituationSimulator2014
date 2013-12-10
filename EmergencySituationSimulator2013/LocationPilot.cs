@@ -137,7 +137,7 @@ namespace EmergencySituationSimulator2013
             if (SegmentLength-CurrentDistance > 6*CurrentSpeed*(1-FactorNextCurve))
             {
                 // Very simple acceleration model
-                CurrentSpeed += (Math.Abs(MaxSpeed - CurrentSpeed) / ratioAcceleration) * time;
+                CurrentSpeed += ((MaxSpeed - CurrentSpeed) / ratioAcceleration) * time;
             }
             else
             {
