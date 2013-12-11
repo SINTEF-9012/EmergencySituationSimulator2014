@@ -134,7 +134,7 @@ namespace EmergencySituationSimulator2013
             }
             
             // If we can accelerate
-            if (SegmentLength-CurrentDistance > 6*CurrentSpeed*(1-FactorNextCurve))
+            if (SegmentLength-CurrentDistance > 12*CurrentSpeed*(1-FactorNextCurve))
             {
                 // Very simple acceleration model
                 CurrentSpeed += ((MaxSpeed - CurrentSpeed) / ratioAcceleration) * time;

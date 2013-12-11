@@ -1,6 +1,6 @@
 ﻿namespace EmergencySituationSimulator2013.HereAPI
 {
-    class HereResponse
+    class HereRouteResponse
     {
         public RouteResponseType Response { get; set; }
     }

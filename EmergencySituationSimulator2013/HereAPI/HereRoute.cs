@@ -11,10 +11,7 @@ namespace EmergencySituationSimulator2013.HereAPI
         private static readonly RestClient Client =
             new RestClient("http://route.cit.api.here.com");
 
-        public static string AppId;
-        public static string AppCode;
-
-        public IRestResponse<HereResponse> Response { get; protected set; }
+        public IRestResponse<HereRouteResponse> Response { get; protected set; }
         public List<Location> Route { get; protected set; }
         public Dictionary<Location, double> Speeds { get; protected set; } 
 
@@ -24,8 +21,8 @@ namespace EmergencySituationSimulator2013.HereAPI
                 Method.GET);
 
             // Application parameters
-            request.AddParameter("app_id", AppId);
-            request.AddParameter("app_code", AppCode);
+            request.AddParameter("app_id", HereConfig.AppId);
+            request.AddParameter("app_code", HereConfig.AppCode);
 
             // Pedestrian or car
             request.AddParameter("mode", "fastest;" +
@@ -52,7 +49,7 @@ namespace EmergencySituationSimulator2013.HereAPI
                 to.lat, to.lng));
 
             // Magic
-            Response = Client.Execute<HereResponse>(request);
+            Response = Client.Execute<HereRouteResponse>(request);
             
             try
             {

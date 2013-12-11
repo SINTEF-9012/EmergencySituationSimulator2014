@@ -59,13 +59,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HereAPI\AddressType.cs" />
+    <Compile Include="HereAPI\HereConfig.cs" />
+    <Compile Include="HereAPI\HereGeocoder.cs" />
     <Compile Include="HereAPI\GeoCoordinateType.cs" />
-    <Compile Include="HereAPI\HereResponse.cs" />
+    <Compile Include="HereAPI\HereRouteResponse.cs" />
     <Compile Include="HereAPI\HereRoute.cs" />
+    <Compile Include="HereAPI\HereSearchResponse.cs" />
+    <Compile Include="HereAPI\LocationType.cs" />
     <Compile Include="HereAPI\ManeuverType.cs" />
     <Compile Include="HereAPI\RouteLegType.cs" />
     <Compile Include="HereAPI\RouteResponseType.cs" />
     <Compile Include="HereAPI\RouteType.cs" />
+    <Compile Include="HereAPI\SearchResponseType.cs" />
+    <Compile Include="HereAPI\SearchResponseViewType.cs" />
+    <Compile Include="HereAPI\SearchResultType.cs" />
     <Compile Include="LocationPilot.cs" />
     <Compile Include="Model\FireMan.cs" />
     <Compile Include="Model\FireTruck.cs" />

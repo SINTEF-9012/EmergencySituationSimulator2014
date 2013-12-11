@@ -40,38 +40,60 @@ namespace EmergencySituationSimulator2013
             Entity.VisitAll(visitor);
 
 
-            HereRoute.AppId = "UagcOxvkfpYoMLqLIMim";
-            HereRoute.AppCode = "P448_k68ZS0v0FkLaa0f7Q";
+            HereConfig.AppId = "UagcOxvkfpYoMLqLIMim";
+            HereConfig.AppCode = "P448_k68ZS0v0FkLaa0f7Q";
 
-            var fireTruck = new FireTruck();
+            var a = new HereGeocoder(Oracle.CreateLocation());
+            foreach (var ab in a.Address)
+            {
+                Console.WriteLine(ab.Label);
+            }
 
-            var path = new HereRoute(Oracle.CreateLocation(), Oracle.CreateLocation());
-
-            var fireTruckPilot = new LocationPilot(fireTruck, path.Route, path.Speeds);
-            fireTruckPilot.MaxSpeed = 300.5;
+            return;
 
             var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);
-
-            var hack = new OLdEntity();
             var patients = new List<OLdEntity>();
-            patients.Add(hack);
             
-            transmission.init(patients);
 
-            var timer = new Timer(delegate
+
+            var center = Oracle.CreateLocation();
+
+            for (var i = 0; i < 1; ++i)
             {
-                if (!fireTruckPilot.AtDestination)
+                var fireTruck = new FireTruck();
+                var path = new HereRoute(Oracle.CreateLocation(), center);
+
+                var fireTruckPilot = new LocationPilot(fireTruck, path.Route, path.Speeds);
+                fireTruckPilot.MaxSpeed = 300.5;
+
+                
+
+                var hack = new OLdEntity();
+
+                patients.Add(hack);
+                var timer = new Timer(delegate
                 {
-                    fireTruckPilot.Tick(0.08);
-                    hack.location.lat = fireTruck.Location.lat;
-                    hack.location.lng = fireTruck.Location.lng;
+                    if (!fireTruckPilot.AtDestination)
+                    {
+                        fireTruckPilot.Tick(0.08);
+                        hack.location.lat = fireTruck.Location.lat;
+                        hack.location.lng = fireTruck.Location.lng;
 
-                    Console.WriteLine(fireTruck.Location+" - " +fireTruckPilot.CurrentSpeed);
+                        Console.WriteLine(fireTruck.Location + " - " + fireTruckPilot.CurrentSpeed);
 
+                        
+                    }
+
+                }, null, 0, 300);
+            }
+
+            transmission.init(patients);
+            var lapin = new Timer(delegate
+                {
+                    Console.WriteLine("cand");
                     transmission.update(patients);
-                }
-
-            }, null, 0, 300);
+                }, null, 0, 300);
+                
             
             Thread.Sleep(Timeout.Infinite);
             return;
