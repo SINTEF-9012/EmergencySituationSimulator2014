@@ -49,6 +49,9 @@ namespace EmergencySituationSimulator2013
                 Console.WriteLine(ab.Label);
             }
 
+            var c = new HereGeocoder("Bras, var, France");
+            Console.WriteLine(c.Location);
+
             return;
 
             var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);
