@@ -19,45 +19,33 @@ namespace EmergencySituationSimulator2013
             // Load settings
             NameValueCollection appSettings = ConfigurationManager.AppSettings;
 
+            // Setting up the Here API
+            HereConfig.AppId = appSettings["HereAppId"];
+            HereConfig.AppCode = appSettings["HereAppCode"];
+
+            // Retreive the GPS position for the address
+            var placeInfos = new HereGeocoder(appSettings["place"]);
+
+
             // Setting up the Oracle
             Oracle.Generator = Random.fromSeed(appSettings["seed"]);
-            Oracle.Center = new Location(appSettings["locationCenter"]);
+            Oracle.Center = placeInfos.Location;
             double.TryParse(appSettings["areaRadius"], out Oracle.AreaRadius);
             
 
-            for (var i = 0; i < 10; ++i)
+            /*for (var i = 0; i < 10; ++i)
             {
                 new PoliceCar();
             }
             new FireTruck();
             new Patient();
-            new Zombie();
+            new Zombie();*/
 
-            var visitor = new TextDebugVisitor();
-
-
-
-            Entity.VisitAll(visitor);
-
-
-            HereConfig.AppId = "UagcOxvkfpYoMLqLIMim";
-            HereConfig.AppCode = "P448_k68ZS0v0FkLaa0f7Q";
-
-            var a = new HereGeocoder(Oracle.CreateLocation());
-            foreach (var ab in a.Address)
-            {
-                Console.WriteLine(ab.Label);
-            }
-
-            var c = new HereGeocoder("Bras, var, France");
-            Console.WriteLine(c.Location);
-
-            return;
-
-            var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);
-            var patients = new List<OLdEntity>();
             
 
+
+            var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);
+            
 
             var center = Oracle.CreateLocation();
 
@@ -66,35 +54,33 @@ namespace EmergencySituationSimulator2013
                 var fireTruck = new FireTruck();
                 var path = new HereRoute(Oracle.CreateLocation(), center);
 
-                var fireTruckPilot = new LocationPilot(fireTruck, path.Route, path.Speeds);
-                fireTruckPilot.MaxSpeed = 300.5;
+                var fireTruckPilot = new LocationPilot(fireTruck, path.Route, path.Speeds)
+                    {
+                        MaxSpeed = 300.5
+                    };
 
-                
 
-                var hack = new OLdEntity();
-
-                patients.Add(hack);
                 var timer = new Timer(delegate
                 {
                     if (!fireTruckPilot.AtDestination)
                     {
                         fireTruckPilot.Tick(0.08);
-                        hack.location.lat = fireTruck.Location.lat;
-                        hack.location.lng = fireTruck.Location.lng;
-
                         Console.WriteLine(fireTruck.Location + " - " + fireTruckPilot.CurrentSpeed);
-
-                        
                     }
 
                 }, null, 0, 300);
             }
 
-            transmission.init(patients);
+            var masterVisitor = new MasterVisitor();
+            var textDebugVisitor = new TextDebugVisitor();
+
             var lapin = new Timer(delegate
                 {
-                    Console.WriteLine("cand");
-                    transmission.update(patients);
+                    masterVisitor.StartTransaction();
+                    Entity.VisitAll(masterVisitor);
+                    transmission.Send(masterVisitor.Transaction);
+                    Console.WriteLine("sent :-)");
+                    Entity.VisitAll(textDebugVisitor);
                 }, null, 0, 300);
                 
             

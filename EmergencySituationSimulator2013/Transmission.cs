@@ -15,6 +15,7 @@ namespace EmergencySituationSimulator2013
         private MemoryStream Output;
         private string SenderID;
 
+
         public Transmission(string path, string senderID)
         {
             this.SenderID = senderID;
@@ -28,10 +29,19 @@ namespace EmergencySituationSimulator2013
                 };
 
             Client.Connect();
-
         }
 
-        public void init(List<OLdEntity> patients)
+        public void Send(Transaction transaction)
+        {
+            transaction.SenderID = SenderID;
+            Output.SetLength(0);
+            Serializer.Serialize(Output, transaction);
+            Output.Position = 0;
+
+            Client.Send(Output, (int)Output.Length);
+        }
+
+        /*public void init(List<OLdEntity> patients)
         {
             var transaction = new NodeMaster.Transaction();
             transaction.SenderID = this.SenderID;
@@ -53,7 +63,7 @@ namespace EmergencySituationSimulator2013
                     {
                         lat = patient.location.lat,
                         lng = patient.location.lng
-                    };*/
+                    };* /
 
                 transaction.PublishList.PatientList.Add(message);
             }
@@ -90,6 +100,6 @@ namespace EmergencySituationSimulator2013
             Output.Position = 0;
 
             Client.Send(Output, (int)Output.Length);
-        }
+        }*/
     }
 }

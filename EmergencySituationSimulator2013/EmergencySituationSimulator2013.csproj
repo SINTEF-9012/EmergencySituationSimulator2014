@@ -98,6 +98,7 @@
     <Compile Include="Transmission.cs" />
     <Compile Include="Transmission\GeneratedMessages.cs" />
     <Compile Include="Visitors\IVisitor.cs" />
+    <Compile Include="Visitors\MasterVisitor.cs" />
     <Compile Include="Visitors\TextDebugVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
