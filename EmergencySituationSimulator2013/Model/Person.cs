@@ -5,18 +5,36 @@ using System.Text;
 
 namespace EmergencySituationSimulator2013.Model
 {
-    abstract class Person : Entity
+    public abstract class Person : Entity
     {
-        protected double _pv = 100;
-        public double Pv { get { return _pv; } }
+        public double Pv { get; protected set; }
+        public double GoodHealtPv { get; protected set; }
 
-        public string Name { get; protected set; }
+        public double HealtStatus
+        {
+            get { return Pv/GoodHealtPv; }
+        }
+
+        public enum SexEnum
+        {
+            Woman,
+            Man,
+            Other
+        }
+
+        public SexEnum Sex { get; protected set; }
 
         protected Person()
         {
-            _pv = Math.Max(Oracle.CreateNumber(100.0, 42.0), 10.0);
+            GoodHealtPv = 100.0;
 
-            Name = Oracle.CreateName();
+            Pv = Math.Max(Oracle.CreateNumber(100.0, 42.0), 10.0);
+
+            Name = Oracle.CreatePersonName();
+
+            // Maybe I should rename the isFortunate method :P
+            Sex = Oracle.IsFortunate() ? SexEnum.Woman : SexEnum.Man;
+            
         }
         
         public void Hit()

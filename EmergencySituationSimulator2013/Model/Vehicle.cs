@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EmergencySituationSimulator2013.Model
 {
-    abstract class Vehicle : Entity
+    public abstract class Vehicle : Entity
     {
 
     }

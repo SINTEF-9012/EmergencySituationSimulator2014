@@ -31,7 +31,7 @@ namespace EmergencySituationSimulator2013
             return Generator.NextGaussianDouble(hazardous, typicalValue);
         }
         
-        public static string CreateName()
+        public static string CreatePersonName()
         {
             return Faker.Name.GetName();
         }

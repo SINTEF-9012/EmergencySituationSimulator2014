@@ -33,6 +33,15 @@ namespace EmergencySituationSimulator2013
             return "" + lat + " " + lng;
         }
 
+        public NodeMaster.LatLng ToLatLng()
+        {
+            return new NodeMaster.LatLng
+                {
+                    lat = this.lat,
+                    lng = this.lng
+                };
+        }
+
         public void Move(double bearing, double distance)
         {
             // formula from http://stackoverflow.com/questions/9550282/moving-gps-coordinate
