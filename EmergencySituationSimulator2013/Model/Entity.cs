@@ -13,9 +13,9 @@ namespace EmergencySituationSimulator2013.Model
 
         public string Id { get { return _id; } }
 
-        public Location Location { get; private set; }
+        public Location Location { get; set; }
 
-        public string Name { get; protected set; }
+        public string Name;
 
         protected Entity()
         {

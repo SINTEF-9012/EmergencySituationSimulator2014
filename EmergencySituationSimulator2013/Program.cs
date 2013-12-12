@@ -49,9 +49,20 @@ namespace EmergencySituationSimulator2013
 
             var center = Oracle.CreateLocation();
 
+            for(var ii = 0; ii < 8; ++ii)
+            {
+                var p = new Patient
+                    {
+                        Location = Oracle.CreateLocation(Oracle.AreaRadius/8)
+                    };
+                p.Hit();
+            }
+
+
             for (var i = 0; i < 1; ++i)
             {
                 var fireTruck = new FireTruck();
+                fireTruck.Name = "SuperCamion";
                 var path = new HereRoute(Oracle.CreateLocation(), center);
 
                 var fireTruckPilot = new LocationPilot(fireTruck, path.Route, path.Speeds)

@@ -10,17 +10,24 @@ namespace EmergencySituationSimulator2013.Visitors
         public string ReportPrividerId;
         protected string ReportId;
         protected ulong TimeStamp;
+        protected bool FirstTransaction = true;
 
 
         public void StartTransaction()
         {
+            
             Transaction = new Transaction
                 {
                     PublishList = new Transaction.Content()
                 };
 
-            ReportId = new Guid().ToString("D");
-            TimeStamp = (ulong)(DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
+            if (FirstTransaction)
+            {
+                ReportId = new Guid().ToString("D");
+                TimeStamp = (ulong)(DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
+                FirstTransaction = false;
+            }
+            
         }
 
         public void Visit(Entity e)
@@ -48,13 +55,18 @@ namespace EmergencySituationSimulator2013.Visitors
             var patient = new PatientModel
                 {
                     ID = v.Id,
-                    TriageInfo =
+                    TriageInfo = new TriageInfoModel
                         {
                             ReportProviderId = ReportPrividerId,
                             ReportId = ReportId,
                             ReportDateTime = timeStamp
                         },
-                    Location = v.Location.ToLatLng()
+                    Location = v.Location.ToLatLng(),
+                    Age = new AgeModel
+                        {
+                            Unit = "y",
+                            Value = (uint) v.Age
+                        }
 
                 };
 

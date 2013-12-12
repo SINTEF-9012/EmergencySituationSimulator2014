@@ -10,6 +10,8 @@ namespace EmergencySituationSimulator2013.Model
         public double Pv { get; protected set; }
         public double GoodHealtPv { get; protected set; }
 
+        public double Age { get; protected set; }
+
         public double HealtStatus
         {
             get { return Pv/GoodHealtPv; }
@@ -34,12 +36,14 @@ namespace EmergencySituationSimulator2013.Model
 
             // Maybe I should rename the isFortunate method :P
             Sex = Oracle.IsFortunate() ? SexEnum.Woman : SexEnum.Man;
-            
+
+            Age = Oracle.CreateAge();
+
         }
         
         public void Hit()
         {
-            
+            Pv += Math.Min(Oracle.CreateNumber(-30.0, 30.0), 0);
         }
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace EmergencySituationSimulator2013
 {
@@ -11,12 +8,21 @@ namespace EmergencySituationSimulator2013
         public static Location Center;
         public static double AreaRadius;
 
-        public static Location CreateLocation()
+        public static Location CreateLocation(Double areaRadius = 0, Location center = null)
         {
-            var location = new Location(Center);
+            if (center == null)
+            {
+                center = Center;
+            }
+            var location = new Location(center);
+
+            if (Math.Abs(areaRadius - 0) < Double.Epsilon)
+            {
+                areaRadius = AreaRadius;
+            }
 
             location.Move(Generator.NextDouble()*360.0,
-                Generator.NextGaussianDouble(AreaRadius/2.0, AreaRadius/4.0));
+                Generator.NextGaussianDouble(areaRadius/2.0, areaRadius/4.0));
 
             return location;
         }
@@ -34,6 +40,12 @@ namespace EmergencySituationSimulator2013
         public static string CreatePersonName()
         {
             return Faker.Name.GetName();
+        }
+        
+        public static double CreateAge()
+        {
+            // TODO improve it
+            return Generator.NextDouble()*100;
         }
     }
 }
