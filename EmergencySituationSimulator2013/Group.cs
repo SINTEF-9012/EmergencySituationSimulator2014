@@ -1,34 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using EmergencySituationSimulator2013.Model;
 
 namespace EmergencySituationSimulator2013
 {
     class Group
     {
-        public List<OLdEntity> entities { get; private set; }
+        public List<Entity> Entities { get; private set; }
 
-        public Motion motion { get; private set; }
+        public Motion Motion { get; private set; }
 
         public Group(double speedRatio = 1.0)
         {
-            entities = new List<OLdEntity>();
-            motion = new Motion(speedRatio);
+            Entities = new List<Entity>();
+            Motion = new Motion(speedRatio);
         }
 
         public void Move(Random random, double time)
         {
-            var movment = motion.Move(random, time);
-            foreach (var entity in entities)
+            var movment = Motion.Move(random, time);
+            foreach (var entity in Entities)
             {
-                entity.location.Move(movment.Item1,movment.Item2);
+                entity.Location.Move(movment.Item1,movment.Item2);
             }
         }
 
-        public void AddEntity(OLdEntity oLdEntity)
+        public void AddEntity(Entity e)
         {
-            entities.Add(oLdEntity);
+            Entities.Add(e);
         }
     }
 }

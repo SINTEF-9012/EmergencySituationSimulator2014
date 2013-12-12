@@ -40,6 +40,9 @@
     <Reference Include="FFaker.Net">
       <HintPath>packages\FFaker.Net.1.1.0.0\lib\net40\FFaker.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Hashids.net">
+      <HintPath>packages\Hashids.net.0.1.4.0\lib\net40\Hashids.net.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>

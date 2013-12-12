@@ -7,8 +7,7 @@ namespace EmergencySituationSimulator2013.Model
     public abstract class Entity
     {
         public static List<Entity> Instances = new List<Entity>();
-
-        protected Guid Guid;
+        
         private readonly string _id;
 
         public string Id { get { return _id; } }
@@ -19,8 +18,15 @@ namespace EmergencySituationSimulator2013.Model
 
         protected Entity()
         {
-            Guid = Guid.NewGuid();
-            _id = Guid.ToString("D");
+            //Guid = Guid.NewGuid();
+
+            // Base64url
+            /*_id = Convert.ToBase64String(Guid.ToByteArray())
+                .Substring(0,10).Replace('+', '-').Replace('/', '_');*/
+
+            // Ascii85 <3
+            //_id = Logos.Utility.Ascii85.Encode(Guid.ToByteArray()).Substring(0, 10);
+            _id = Oracle.GenerateId();
 
             Location = new Location();
 

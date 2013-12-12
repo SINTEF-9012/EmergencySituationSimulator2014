@@ -31,6 +31,7 @@ namespace EmergencySituationSimulator2013
             Oracle.Generator = Random.fromSeed(appSettings["seed"]);
             Oracle.Center = placeInfos.Location;
             double.TryParse(appSettings["areaRadius"], out Oracle.AreaRadius);
+            Oracle.Center = Oracle.CreateLocation(Oracle.AreaRadius/8);
             
 
             /*for (var i = 0; i < 10; ++i)
@@ -41,6 +42,8 @@ namespace EmergencySituationSimulator2013
             new Patient();
             new Zombie();*/
 
+            int time = 250;
+
             
 
 
@@ -48,18 +51,28 @@ namespace EmergencySituationSimulator2013
             
 
             var center = Oracle.CreateLocation();
+            
+            var canards = new List<Tuple<Patient, Motion>>();
 
-            for(var ii = 0; ii < 8; ++ii)
+            for(var ii = 0; ii < 20; ++ii)
             {
                 var p = new Patient
                     {
                         Location = Oracle.CreateLocation(Oracle.AreaRadius/8)
                     };
                 p.Hit();
+                p.AutomaticTriage();
+
+                var motion = new Motion(0.4);
+
+                canards.Add(new Tuple<Patient, Motion>(p, motion));
+
+                
             }
 
+            var lapins = new List<Tuple<FireTruck, LocationPilot>>();
 
-            for (var i = 0; i < 1; ++i)
+            for (var i = 0; i < 3; ++i)
             {
                 var fireTruck = new FireTruck();
                 fireTruck.Name = "SuperCamion";
@@ -71,15 +84,7 @@ namespace EmergencySituationSimulator2013
                     };
 
 
-                var timer = new Timer(delegate
-                {
-                    if (!fireTruckPilot.AtDestination)
-                    {
-                        fireTruckPilot.Tick(0.08);
-                        Console.WriteLine(fireTruck.Location + " - " + fireTruckPilot.CurrentSpeed);
-                    }
-
-                }, null, 0, 300);
+               lapins.Add(new Tuple<FireTruck, LocationPilot>(fireTruck, fireTruckPilot));
             }
 
             var masterVisitor = new MasterVisitor();
@@ -87,13 +92,28 @@ namespace EmergencySituationSimulator2013
 
             var lapin = new Timer(delegate
                 {
+                    foreach (var canard in canards)
+                    {
+                        var m = canard.Item2.Move(Oracle.Generator, 0.06);
+                        canard.Item1.Location.Move(m.Item1, m.Item2);
+                    }
+
+                    foreach (var lapinou in lapins)
+                    {
+                        if (!lapinou.Item2.AtDestination)
+                        {
+                            lapinou.Item2.Tick(0.06);
+                            Console.WriteLine(lapinou.Item1.Location + " - " + lapinou.Item2.CurrentSpeed);
+                        }
+                    }
+
                     masterVisitor.StartTransaction();
                     Entity.VisitAll(masterVisitor);
                     transmission.Send(masterVisitor.Transaction);
                     Console.WriteLine("sent :-)");
                     Entity.VisitAll(textDebugVisitor);
-                }, null, 0, 300);
-                
+                }, null, 0, time);
+
             
             Thread.Sleep(Timeout.Infinite);
             return;

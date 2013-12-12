@@ -1,4 +1,5 @@
 ﻿using System;
+using HashidsNet;
 
 namespace EmergencySituationSimulator2013
 {
@@ -46,6 +47,18 @@ namespace EmergencySituationSimulator2013
         {
             // TODO improve it
             return Generator.NextDouble()*100;
+        }
+
+        private static int _generateIdCpt = 0;
+        private static HashidsNet.Hashids _hashIds;
+        public static string GenerateId()
+        {
+            if (_hashIds == null)
+            {
+                _hashIds = new Hashids("ESS"+Generator.Next(0,2013), 0, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+            }
+
+            return _hashIds.Encrypt(++_generateIdCpt);
         }
     }
 }
