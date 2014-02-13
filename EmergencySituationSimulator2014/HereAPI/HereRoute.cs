@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using RestSharp;
 
-namespace EmergencySituationSimulator2013.HereAPI
+namespace EmergencySituationSimulator2014.HereAPI
 {
     class HereRoute
     {

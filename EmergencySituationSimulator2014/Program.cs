@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
-using System.Globalization;
 using System.Threading;
-using EmergencySituationSimulator2013.HereAPI;
-using EmergencySituationSimulator2013.Model;
-using EmergencySituationSimulator2013.Visitors;
+using EmergencySituationSimulator2014.HereAPI;
+using EmergencySituationSimulator2014.Model;
+using EmergencySituationSimulator2014.Visitors;
+using ThingModel;
+using ThingModel.WebSockets;
 
-namespace EmergencySituationSimulator2013
+namespace EmergencySituationSimulator2014
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main(/*string[] args*/)
         {
             Console.WriteLine("BridgeSimpleSimulator");
 
@@ -44,11 +45,9 @@ namespace EmergencySituationSimulator2013
 
             int time = 250;
 
-            
+	        Wharehouse wharehouse = new Wharehouse();
 
-
-            var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);
-
+	        var thingModelClient = new Client(appSettings["senderID"], appSettings["connection"], wharehouse);
 
             var center = Oracle.CreateLocation(Oracle.AreaRadius / 6);
             var centerAverage = new Location(center);
@@ -92,10 +91,11 @@ namespace EmergencySituationSimulator2013
                lapins.Add(new Tuple<FireTruck, LocationPilot>(fireTruck, fireTruckPilot));
             }
 
-            var masterVisitor = new MasterVisitor();
+            var thingModelVisitor = new ThingModelVisitor(wharehouse);
             var textDebugVisitor = new TextDebugVisitor();
-
-            var lapin = new Timer(delegate
+			
+			// ReSharper disable once ObjectCreationAsStatement
+            new Timer(delegate
                 {
                     foreach (var canard in canards)
                     {
@@ -112,107 +112,14 @@ namespace EmergencySituationSimulator2013
                         }
                     }
 
-                    masterVisitor.StartTransaction();
-                    Entity.VisitAll(masterVisitor);
-                    masterVisitor.FinishTransaction();
-                    transmission.Send(masterVisitor.Transaction);
+                    Entity.VisitAll(thingModelVisitor);
+					thingModelClient.Send();
                     Console.WriteLine("sent :-)");
                     Entity.VisitAll(textDebugVisitor);
                 }, null, 0, time);
 
             
             Thread.Sleep(Timeout.Infinite);
-            return;
-            // Load settings
-            /*NameValueCollection appSettings = ConfigurationManager.AppSettings;
-
-            int areaRadius, patientsNumber, patientsGroupsNumber, resourcesNumber, resourcesGroupsNumber;
-
-            int.TryParse(appSettings["areaRadius"], out areaRadius);
-            int.TryParse(appSettings["patientsNumber"], out patientsNumber);
-            int.TryParse(appSettings["patientsGroupsNumber"], out patientsGroupsNumber);
-            int.TryParse(appSettings["resourcesNumber"], out resourcesNumber);
-            int.TryParse(appSettings["resourcesGroupsNumber"], out resourcesGroupsNumber);
-
-            Location center = Location.fromString(appSettings["locationCenter"]);
-
-            Random random = Random.fromSeed(appSettings["seed"]);
-
-            double patientsSpeedRatio, resourcesSpeedRatio, speedInsideGroup;
-            double.TryParse(appSettings["patientsSpeedRaio"], NumberStyles.Any, CultureInfo.InvariantCulture,
-                out patientsSpeedRatio);
-            double.TryParse(appSettings["resourcesSpeedRaio"], NumberStyles.Any, CultureInfo.InvariantCulture,
-                out resourcesSpeedRatio);
-            double.TryParse(appSettings["speedInsideGroup"], NumberStyles.Any, CultureInfo.InvariantCulture,
-                out speedInsideGroup);
-
-            // Create entities
-
-            var patients = new List<OLdEntity>(patientsNumber);
-            //var resources = new List<OLdEntity>(resourcesNumber);
-            var groups = new List<Group>(patientsGroupsNumber + resourcesGroupsNumber);
-
-            Group currentGroup = null;
-            Location currentLocation = null;
-            int nbGroup = 0;
-
-            for (int i = 0; i < patientsNumber; ++i)
-            {
-                if (currentGroup == null ||
-                    (nbGroup < patientsGroupsNumber && random.Next(patientsNumber/patientsGroupsNumber) == 1))
-                {
-                    currentGroup = new Group(patientsSpeedRatio);
-                    currentLocation = new Location()
-                    {
-                        lat = center.lat,
-                        lng = center.lng
-                    };
-
-                    currentLocation.Move(random.NextDouble()*360.0, random.NextGaussianDouble(areaRadius/2, areaRadius/4));
-
-                    groups.Add(currentGroup);
-                }
-
-                var patient = new OLdEntity(Math.Abs(random.NextGaussianDouble(speedInsideGroup, speedInsideGroup)));
-
-                // Place the patient on the area
-                patient.location.lat = currentLocation.lat;
-
-                patient.location.lng = currentLocation.lng;
-                patient.location.Move(random.NextDouble()*360.0, random.NextGaussianDouble(currentGroup.entities.Count*2+5, currentGroup.entities.Count+10));
-
-                currentGroup.AddEntity(patient);
-                patients.Add(patient);
-            }
-
-            // Start the communication system
-            var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);
-            transmission.init(patients);
-
-            // Start the main loop
-
-            var timer = new Timer(delegate
-            {
-                foreach (var group in groups)
-                {
-                    group.Move(random, 0.08);
-                }
-                foreach (OLdEntity patient in patients)
-                {
-                    patient.Move(random, 0.08);
-                }
-
-                transmission.update(patients);
-            }, null, 0, 300);
-
-            
-
-            // Commit when the user type enter
-            do
-            {
-                
-                transmission.update(patients);
-            } while (!Console.ReadLine().Contains("exit"));*/
         }
     }
 }

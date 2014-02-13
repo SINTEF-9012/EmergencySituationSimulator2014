@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace EmergencySituationSimulator2013
+namespace EmergencySituationSimulator2014
 {
     public class Location
     {

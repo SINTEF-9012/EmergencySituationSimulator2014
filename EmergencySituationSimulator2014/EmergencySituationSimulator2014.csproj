@@ -8,8 +8,8 @@
     <ProjectGuid>{5014DAA6-D776-4C1D-8AE0-02837C7F208E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EmergencySituationSimulator2013</RootNamespace>
-    <AssemblyName>EmergencySituationSimulator2013</AssemblyName>
+    <RootNamespace>EmergencySituationSimulator2014</RootNamespace>
+    <AssemblyName>EmergencySituationSimulator2014</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -94,7 +94,6 @@
     <Compile Include="Model\Patient.cs" />
     <Compile Include="Model\WheeledVehicle.cs" />
     <Compile Include="Model\Zombie.cs" />
-    <Compile Include="OLdEntity.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Model\Entity.cs" />
@@ -104,10 +103,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Random.cs" />
-    <Compile Include="Transmission.cs" />
     <Compile Include="Transmission\GeneratedMessages.cs" />
+    <Compile Include="Visitors\ThingModelVisitor.cs" />
     <Compile Include="Visitors\IVisitor.cs" />
-    <Compile Include="Visitors\MasterVisitor.cs" />
     <Compile Include="Visitors\TextDebugVisitor.cs" />
   </ItemGroup>
   <ItemGroup>

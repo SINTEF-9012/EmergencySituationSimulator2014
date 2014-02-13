@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EmergencySituationSimulator2013
+namespace EmergencySituationSimulator2014
 {
     public class Motion
     {

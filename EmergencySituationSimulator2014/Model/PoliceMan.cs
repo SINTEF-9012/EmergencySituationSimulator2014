@@ -1,6 +1,6 @@
-﻿using EmergencySituationSimulator2013.Visitors;
+﻿using EmergencySituationSimulator2014.Visitors;
 
-namespace EmergencySituationSimulator2013.Model
+namespace EmergencySituationSimulator2014.Model
 {
     class PoliceMan : RescuePerson
     {

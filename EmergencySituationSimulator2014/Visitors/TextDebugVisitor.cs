@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using EmergencySituationSimulator2013.Model;
+using EmergencySituationSimulator2014.Model;
 
-namespace EmergencySituationSimulator2013.Visitors
+namespace EmergencySituationSimulator2014.Visitors
 {
     class TextDebugVisitor : IVisitor
     {

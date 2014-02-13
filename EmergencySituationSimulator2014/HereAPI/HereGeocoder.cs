@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using RestSharp;
 
-namespace EmergencySituationSimulator2013.HereAPI
+namespace EmergencySituationSimulator2014.HereAPI
 {
     class HereGeocoder
     {

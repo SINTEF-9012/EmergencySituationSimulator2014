@@ -1,7 +1,7 @@
 ﻿using System;
 using HashidsNet;
 
-namespace EmergencySituationSimulator2013
+namespace EmergencySituationSimulator2014
 {
     class Oracle
     {
