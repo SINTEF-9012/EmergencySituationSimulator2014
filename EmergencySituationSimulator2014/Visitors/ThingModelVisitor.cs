@@ -38,6 +38,11 @@ namespace EmergencySituationSimulator2014.Visitors
 			_typeWheeledVehicle.Description = "EmergencySituationSimulator wheeled vehicle";
 			_typeWheeledVehicle.DefineProperty(PropertyType.Create<Property.String>("name"));
 			_typeWheeledVehicle.DefineProperty(PropertyType.Create<Property.Location>("location"));
+
+			_wharehouse.RegisterType(_typeEntity);
+			_wharehouse.RegisterType(_typeWheeledVehicle);
+			_wharehouse.RegisterType(_typePatient);
+			_wharehouse.RegisterType(_typeZombie);
 		}
 
 		public Thing GenerateThing(Entity e, ThingType type)

@@ -8,6 +8,7 @@ using EmergencySituationSimulator2014.Model;
 using EmergencySituationSimulator2014.Visitors;
 using ThingModel;
 using ThingModel.WebSockets;
+using Timer = System.Timers.Timer;
 
 namespace EmergencySituationSimulator2014
 {
@@ -93,31 +94,38 @@ namespace EmergencySituationSimulator2014
 
             var thingModelVisitor = new ThingModelVisitor(wharehouse);
             var textDebugVisitor = new TextDebugVisitor();
-			
+
+	        var timer = new Timer();
+	        timer.Interval = time*3;
 			// ReSharper disable once ObjectCreationAsStatement
-            new Timer(delegate
-                {
-                    foreach (var canard in canards)
-                    {
-                        var m = canard.Item2.Move(Oracle.Generator, 0.06);
-                        canard.Item1.Location.Move(m.Item1, m.Item2);
-                    }
+	        timer.Elapsed += delegate
+	        {
+		        lock (wharehouse)
+		        {
+			        foreach (var canard in canards)
+			        {
+				        var m = canard.Item2.Move(Oracle.Generator, 0.06);
+				        canard.Item1.Location.Move(m.Item1, m.Item2);
+			        }
 
-                    foreach (var lapinou in lapins)
-                    {
-                        if (!lapinou.Item2.AtDestination)
-                        {
-                            lapinou.Item2.Tick(0.06);
-                            Console.WriteLine(lapinou.Item1.Location + " - " + lapinou.Item2.CurrentSpeed);
-                        }
-                    }
+			        foreach (var lapinou in lapins)
+			        {
+				        if (!lapinou.Item2.AtDestination)
+				        {
+					        lapinou.Item2.Tick(0.06);
+					        Console.WriteLine(lapinou.Item1.Location + " - " + lapinou.Item2.CurrentSpeed);
+				        }
+			        }
 
-                    Entity.VisitAll(thingModelVisitor);
-					thingModelClient.Send();
-                    Console.WriteLine("sent :-)");
-                    Entity.VisitAll(textDebugVisitor);
-                }, null, 0, time);
+			        Entity.VisitAll(thingModelVisitor);
+			        thingModelClient.Send();
+			        Console.WriteLine("sent :-)");
+			        Entity.VisitAll(textDebugVisitor);
+		        }
+	        };
 
+	        timer.Enabled = true;
+			timer.Start();
             
             Thread.Sleep(Timeout.Infinite);
         }
