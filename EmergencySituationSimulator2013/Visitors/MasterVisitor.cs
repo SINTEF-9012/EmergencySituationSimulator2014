@@ -7,10 +7,15 @@ namespace EmergencySituationSimulator2013.Visitors
     public class MasterVisitor : IVisitor
     {
         public Transaction Transaction { get; protected set; }
+        protected ResourceMobilizationModel Mobilization;
+
         public string ReportPrividerId;
+        public string SituationName;
         protected string ReportId;
+        protected string MobilizationId;
         protected ulong TimeStamp;
         protected bool FirstTransaction = true;
+        protected AverageLocation Center;
 
 
         public void StartTransaction()
@@ -21,13 +26,38 @@ namespace EmergencySituationSimulator2013.Visitors
                     PublishList = new Transaction.Content()
                 };
 
+            
+
             if (FirstTransaction)
             {
-                ReportId = new Guid().ToString("D");
-                TimeStamp = (ulong)(DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
+                ReportId = Oracle.GenerateId();
+                MobilizationId = Oracle.GenerateId();
+                TimeStamp = (ulong) (DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
                 FirstTransaction = false;
+                Center = new AverageLocation();
             }
-            
+            else
+            {
+                Center.Reset();
+            }
+
+            Mobilization = new ResourceMobilizationModel
+                {
+                    ID = MobilizationId,
+                    Task = SituationName,
+                    NumberOfFirePersonnel = 0,
+                    NumberOfFireVehicles = 0,
+                    NumberOfMedicPersonnel = 0,
+                    NumberOfMedicVehicles = 0,
+                    NumberOfPolicePersonnel = 0,
+                    NumberOfPoliceVehicles = 0
+                };
+            Transaction.PublishList.ResourceMobilizationList.Add(Mobilization);
+        }
+
+        public void FinishTransaction()
+        {
+            Mobilization.Location = Center.Location.ToLatLng();
         }
 
         public void Visit(Entity e)

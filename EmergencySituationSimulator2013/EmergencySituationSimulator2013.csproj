@@ -43,7 +43,8 @@
     <Reference Include="Hashids.net">
       <HintPath>packages\Hashids.net.0.1.4.0\lib\net40\Hashids.net.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net">
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
@@ -57,11 +58,16 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="websocket-sharp">
+    <Reference Include="ThingModel">
+      <HintPath>packages\ThingModel.0.1.0-rc0\lib\ThingModel.dll</HintPath>
+    </Reference>
+    <Reference Include="websocket-sharp, Version=1.0.2.1082, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\WebSocketSharp.1.0.3-rc2\lib\websocket-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AverageLocation.cs" />
     <Compile Include="HereAPI\AddressType.cs" />
     <Compile Include="HereAPI\HereConfig.cs" />
     <Compile Include="HereAPI\HereGeocoder.cs" />
@@ -111,7 +117,9 @@
     <None Include="packages.config" />
     <None Include="Transmission\messages.proto" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Situations\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -29,7 +29,7 @@ namespace EmergencySituationSimulator2013.HereAPI
                                          (pedestrian ? "pedestrian" : "car") +
 
                                          // tollroad are not funny and public transports are disabled
-                                         ";traffic:disabled;tollroad:-1");
+                                         ";traffic:disabled");//;tollroad:-1
 
             // We just want the shapes
             request.AddParameter("routeattributes", "shape,legs");

@@ -48,20 +48,25 @@ namespace EmergencySituationSimulator2013
 
 
             var transmission = new Transmission(appSettings["connection"], appSettings["senderID"]);
-            
 
-            var center = Oracle.CreateLocation();
-            
+
+            var center = Oracle.CreateLocation(Oracle.AreaRadius / 6);
+            var centerAverage = new Location(center);
+
             var canards = new List<Tuple<Patient, Motion>>();
+            
 
             for(var ii = 0; ii < 20; ++ii)
             {
                 var p = new Patient
                     {
-                        Location = Oracle.CreateLocation(Oracle.AreaRadius/8)
+                        Location = Oracle.CreateLocation(Oracle.AreaRadius/8, center)
                     };
                 p.Hit();
                 p.AutomaticTriage();
+
+                centerAverage.lat = (centerAverage.lat + p.Location.lat) / 2;
+                centerAverage.lng = (centerAverage.lng + p.Location.lng) / 2;
 
                 var motion = new Motion(0.4);
 
@@ -76,7 +81,7 @@ namespace EmergencySituationSimulator2013
             {
                 var fireTruck = new FireTruck();
                 fireTruck.Name = "SuperCamion";
-                var path = new HereRoute(Oracle.CreateLocation(), center);
+                var path = new HereRoute(Oracle.CreateLocation(), centerAverage);
 
                 var fireTruckPilot = new LocationPilot(fireTruck, path.Route, path.Speeds)
                     {
@@ -109,6 +114,7 @@ namespace EmergencySituationSimulator2013
 
                     masterVisitor.StartTransaction();
                     Entity.VisitAll(masterVisitor);
+                    masterVisitor.FinishTransaction();
                     transmission.Send(masterVisitor.Transaction);
                     Console.WriteLine("sent :-)");
                     Entity.VisitAll(textDebugVisitor);
