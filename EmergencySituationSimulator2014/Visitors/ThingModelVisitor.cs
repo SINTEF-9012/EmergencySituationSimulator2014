@@ -42,7 +42,7 @@ namespace EmergencySituationSimulator2014.Visitors
 			_wharehouse.RegisterType(_typeZombie);
 		}
 
-		public Thing GenerateThing(Entity e, ThingType type)
+		public BuildANewThing.ThingPropertyBuilder GenerateThing(Entity e, ThingType type)
 		{
 			var loc = e.Location;
 
@@ -72,39 +72,38 @@ namespace EmergencySituationSimulator2014.Visitors
 		public void Visit(Patient v)
 		{
 			var patient = GenerateThing(v, _typePatient);
-			patient.SetProperty(new Property.Double("healt", v.HealtStatus));
-
-			patient.SetProperty(new Property.Int("age", (int) v.Age));
+			patient.ContainingA.Double("healt", v.HealtStatus)
+				.AndAn.Int("age", (int) v.Age);
 
 			switch (v.Sex)
 			{
 				case Person.SexEnum.Woman:
-					patient.SetProperty(new Property.String("sex", "woman"));
+					patient.ContainingA.String("sex", "woman");
 					break;
 				case Person.SexEnum.Man:
-					patient.SetProperty(new Property.String("sex", "man"));
+					patient.ContainingA.String("sex", "man");
 					break;
 				default:
-					patient.SetProperty(new Property.String("sex", "other"));
+					patient.ContainingA.String("sex", "other");
 					break;
 			}
 
 			switch (v.Triage)
 			{
 				case Patient.TriageEnum.Black:
-					patient.SetProperty(new Property.String("triage_status", "BLACK"));
+					patient.ContainingA.String("triage_status", "BLACK");
 					break;
 				case Patient.TriageEnum.Red:
-					patient.SetProperty(new Property.String("triage_status", "RED"));
+					patient.ContainingA.String("triage_status", "RED");
 					break;
 				case Patient.TriageEnum.Yellow:
-					patient.SetProperty(new Property.String("triage_status", "YELLOW"));
+					patient.ContainingA.String("triage_status", "YELLOW");
 					break;
 				case Patient.TriageEnum.Green:
-					patient.SetProperty(new Property.String("triage_status", "GREEN"));
+					patient.ContainingA.String("triage_status", "GREEN");
 					break;
 				case Patient.TriageEnum.White:
-					patient.SetProperty(new Property.String("triage_status", "WHITE"));
+					patient.ContainingA.String("triage_status", "WHITE");
 					break;
 			}
 
