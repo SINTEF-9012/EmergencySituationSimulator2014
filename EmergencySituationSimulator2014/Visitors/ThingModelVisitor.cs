@@ -1,5 +1,6 @@
 ﻿using EmergencySituationSimulator2014.Model;
 using ThingModel;
+using ThingModel.Builders;
 
 namespace EmergencySituationSimulator2014.Visitors
 {
@@ -15,29 +16,25 @@ namespace EmergencySituationSimulator2014.Visitors
 		{
 			_wharehouse = wharehouse;
 
-			_typeEntity = new ThingType("EmergencySituationSimulator2014:entity");
-			_typeEntity.Description = "EmergencySituationSimulator root thing";
-			_typeEntity.DefineProperty(PropertyType.Create<Property.String>("name"));
-			_typeEntity.DefineProperty(PropertyType.Create<Property.Location>("location"));
-			
-			_typePatient = new ThingType("EmergencySituationSimulator2014:person:patient");
-			_typePatient.Description = "EmergencySituationSimulator patient";
-			_typePatient.DefineProperty(PropertyType.Create<Property.String>("name"));
-			_typePatient.DefineProperty(PropertyType.Create<Property.Location>("location"));
-			_typePatient.DefineProperty(PropertyType.Create<Property.Double>("healt"));
-			_typePatient.DefineProperty(PropertyType.Create<Property.Int>("age"));
-			_typePatient.DefineProperty(PropertyType.Create<Property.String>("sex"));
-			_typePatient.DefineProperty(PropertyType.Create<Property.String>("triage_status"));
+			_typeEntity = BuildANewThingType.Named("ESS14:entity")
+				.WichIs("EmergencySituationSimulator root thing")
+				.ContainingA.String("name")
+				.AndA.Location("location");
 
-			_typeZombie = new ThingType("EmergencySituationSimulator2014:person:zombie");
-			_typeZombie.Description = "A Zombie for a very realistic situation";
-			_typeZombie.DefineProperty(PropertyType.Create<Property.String>("name"));
-			_typeZombie.DefineProperty(PropertyType.Create<Property.Location>("location"));
+			_typePatient = BuildANewThingType.Named("ESS14:person:patient")
+				.WichIs("EmergencySituationSimulator patient")
+				.ContainingA.CopyOfThis(_typeEntity)
+				.AndA.Double("healt")
+				.AndAn.Int("age")
+				.AndA.String("sex")
+				.AndA.String("triage_status", "Triage status");
 
-			_typeWheeledVehicle = new ThingType("EmergencySituationSimulator2014:vehicle:wheeled");
-			_typeWheeledVehicle.Description = "EmergencySituationSimulator wheeled vehicle";
-			_typeWheeledVehicle.DefineProperty(PropertyType.Create<Property.String>("name"));
-			_typeWheeledVehicle.DefineProperty(PropertyType.Create<Property.Location>("location"));
+			_typeZombie = BuildANewThingType.Named("ESS14:person:zombie")
+				.ContainingA.CopyOfThis(_typeEntity);
+
+			_typeWheeledVehicle = BuildANewThingType.Named("ESS14:vehicle:wheeled")
+				.WichIs("EmergencySituationSimulator wheeled vehicle")
+				.AndA.CopyOfThis(_typeEntity);
 
 			_wharehouse.RegisterType(_typeEntity);
 			_wharehouse.RegisterType(_typeWheeledVehicle);
@@ -47,16 +44,12 @@ namespace EmergencySituationSimulator2014.Visitors
 
 		public Thing GenerateThing(Entity e, ThingType type)
 		{
-			var thing = new Thing(e.Id, type);
-
 			var loc = e.Location;
 
-			thing.SetProperty(new Property.Location("location",
-				new ThingModel.Location.LatLng(loc.lat, loc.lng)));
-
-			thing.SetProperty(new Property.String("name", e.Name));
-
-			return thing;
+			return BuildANewThing.As(type)
+				.IdentifiedBy(e.Id)
+				.ContainingA.Location("location", new ThingModel.Location.LatLng(loc.lat, loc.lng))
+				.AndA.String("name", e.Name);
 		}
 
 		public void Register(Thing thing)
