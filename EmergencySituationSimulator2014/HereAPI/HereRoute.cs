@@ -42,10 +42,10 @@ namespace EmergencySituationSimulator2014.HereAPI
 
             // And the waypoints
             request.AddParameter("waypoint0",String.Format(
-                CultureInfo.InvariantCulture, "{0:F},{1:F}",
+                CultureInfo.InvariantCulture, "geo!{0:F},{1:F}",
                 from.lat, from.lng));
             request.AddParameter("waypoint1", String.Format(
-                CultureInfo.InvariantCulture, "{0:F},{1:F}",
+                CultureInfo.InvariantCulture, "geo!{0:F},{1:F}",
                 to.lat, to.lng));
 
             // Magic

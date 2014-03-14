@@ -14,7 +14,7 @@ namespace EmergencySituationSimulator2014
 {
     internal class Program
     {
-        private static void Main(/*string[] args*/)
+        private static void MainOld(/*string[] args*/)
         {
             Console.WriteLine("BridgeSimpleSimulator");
 

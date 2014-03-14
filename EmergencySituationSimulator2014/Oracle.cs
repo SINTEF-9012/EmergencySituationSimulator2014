@@ -49,10 +49,15 @@ namespace EmergencySituationSimulator2014
             return Generator.NextDouble()*100;
         }
 
-        private static int _generateIdCpt = 0;
+	    private static int _generateIdCpt = 0;
         private static HashidsNet.Hashids _hashIds;
         public static string GenerateId()
         {
+	        if (_generateIdCpt == 0)
+	        {
+		        _generateIdCpt = Generator.Next(0, 100);
+	        }
+
             if (_hashIds == null)
             {
                 _hashIds = new Hashids("ESS"+Generator.Next(0,2013), 0, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");

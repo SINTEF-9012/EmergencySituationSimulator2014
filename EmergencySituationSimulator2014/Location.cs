@@ -16,8 +16,14 @@ namespace EmergencySituationSimulator2014
 
         public Location(Location copy)
         {
-            this.lat = copy.lat;
-            this.lng = copy.lng;
+            lat = copy.lat;
+            lng = copy.lng;
+        }
+        
+		public Location(double lat, double lng)
+        {
+            this.lat = lat;
+            this.lng = lng;
         }
 
         public Location(string location)
@@ -31,15 +37,6 @@ namespace EmergencySituationSimulator2014
         public override string ToString()
         {
             return "" + lat + " " + lng;
-        }
-
-        public NodeMaster.LatLng ToLatLng()
-        {
-            return new NodeMaster.LatLng
-                {
-                    lat = this.lat,
-                    lng = this.lng
-                };
         }
 
         public void Move(double bearing, double distance)

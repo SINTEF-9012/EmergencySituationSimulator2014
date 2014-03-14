@@ -17,24 +17,24 @@ namespace EmergencySituationSimulator2014.Visitors
 			_wharehouse = wharehouse;
 
 			_typeEntity = BuildANewThingType.Named("ESS14:entity")
-				.WichIs("EmergencySituationSimulator root thing")
+				.WhichIs("EmergencySituationSimulator root thing")
 				.ContainingA.String("name")
 				.AndA.Location("location");
 
 			_typePatient = BuildANewThingType.Named("ESS14:person:patient")
-				.WichIs("EmergencySituationSimulator patient")
-				.ContainingA.CopyOfThis(_typeEntity)
+				.WhichIs("EmergencySituationSimulator patient")
+				.ContainingA.CopyOf(_typeEntity)
 				.AndA.Double("healt")
 				.AndAn.Int("age")
 				.AndA.String("sex")
 				.AndA.String("triage_status", "Triage status");
 
 			_typeZombie = BuildANewThingType.Named("ESS14:person:zombie")
-				.ContainingA.CopyOfThis(_typeEntity);
+				.ContainingA.CopyOf(_typeEntity);
 
 			_typeWheeledVehicle = BuildANewThingType.Named("ESS14:vehicle:wheeled")
-				.WichIs("EmergencySituationSimulator wheeled vehicle")
-				.AndA.CopyOfThis(_typeEntity);
+				.WhichIs("EmergencySituationSimulator wheeled vehicle")
+				.AndA.CopyOf(_typeEntity);
 
 			_wharehouse.RegisterType(_typeEntity);
 			_wharehouse.RegisterType(_typeWheeledVehicle);
@@ -113,6 +113,12 @@ namespace EmergencySituationSimulator2014.Visitors
 		public void Visit(Zombie z)
 		{
 			Register(GenerateThing(z, _typeZombie));
+		}
+
+		public void Visit(ThingModelEntity e)
+		{
+			// Just update the location
+			_wharehouse.NotifyThingUpdate(e.Thing);
 		}
 	}
 }

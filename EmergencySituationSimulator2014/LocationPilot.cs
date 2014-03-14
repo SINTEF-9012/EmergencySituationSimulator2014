@@ -119,7 +119,11 @@ namespace EmergencySituationSimulator2014
                 // Only some waypoints contains speeds informations
                 if (Speeds.ContainsKey(PreviousWayPoint))
                 {
-                    MaxSpeed = Speeds[PreviousWayPoint]*10;
+                    MaxSpeed = Math.Max(Speeds[PreviousWayPoint]*10, 1.0);
+	                if (Double.IsNaN(MaxSpeed))
+	                {
+		                MaxSpeed = 1;
+	                }
                     Console.WriteLine("Vitesseee: " + MaxSpeed);
                 }
             }

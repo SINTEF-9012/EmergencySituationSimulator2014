@@ -40,7 +40,7 @@ namespace EmergencySituationSimulator2014.Model
         
         public void Hit()
         {
-            Pv += Math.Min(Oracle.CreateNumber(-30.0, 30.0), 0);
+            Pv = Math.Max(Pv+Math.Min(Oracle.CreateNumber(-30.0, 30.0), 0), 0);
         }
     }
 }
