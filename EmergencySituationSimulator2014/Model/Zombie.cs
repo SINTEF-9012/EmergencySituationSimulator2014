@@ -11,7 +11,7 @@ namespace EmergencySituationSimulator2014.Model
         {
             Pv /= 4; // Zombies are fragile
         }
-        public override void Accept(Visitors.IVisitor visitor)
+        public new virtual void Accept(Visitors.IVisitor visitor)
         {
             visitor.Visit(this);
         }

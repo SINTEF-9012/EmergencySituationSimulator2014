@@ -4,7 +4,7 @@ using ThingModel;
 
 namespace EmergencySituationSimulator2014.Model
 {
-	class ThingModelEntity:Entity
+	public class ThingModelEntity:Entity
 	{
 		private readonly Thing _thing;
 		public Thing Thing

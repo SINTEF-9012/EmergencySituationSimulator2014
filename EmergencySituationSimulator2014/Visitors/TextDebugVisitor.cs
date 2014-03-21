@@ -48,5 +48,12 @@ namespace EmergencySituationSimulator2014.Visitors
             Sb.Append(z.Name);
             Print();
         }
+
+	    public void Visit(ThingModelEntity e)
+	    {
+            Sb.Append("Thing: ");
+            Sb.Append(e.Name);
+            Print();
+	    }
     }
 }

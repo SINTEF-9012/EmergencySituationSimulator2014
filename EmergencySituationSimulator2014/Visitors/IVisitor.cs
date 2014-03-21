@@ -8,5 +8,6 @@ namespace EmergencySituationSimulator2014.Visitors
         void Visit(WheeledVehicle v);
         void Visit(Patient v);
         void Visit(Zombie z);
+        void Visit(ThingModelEntity e);
     }
 }
