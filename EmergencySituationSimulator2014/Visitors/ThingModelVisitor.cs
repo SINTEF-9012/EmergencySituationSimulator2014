@@ -1,4 +1,5 @@
-﻿using EmergencySituationSimulator2014.Model;
+﻿using System;
+using EmergencySituationSimulator2014.Model;
 using ThingModel;
 using ThingModel.Builders;
 
@@ -48,7 +49,8 @@ namespace EmergencySituationSimulator2014.Visitors
 
 			return BuildANewThing.As(type)
 				.IdentifiedBy(e.Id)
-				.ContainingA.Location("location", new ThingModel.Location.LatLng(loc.lat, loc.lng))
+				.ContainingA.Location("location", new ThingModel.Location.LatLng(
+					Math.Round(loc.lat, 7), Math.Round(loc.lng,7)))
 				.AndA.String("name", e.Name);
 		}
 
