@@ -13,7 +13,7 @@ namespace EmergencySituationSimulator2014
 {
 	class ProgramReborn
 	{
-		private Wharehouse _wharehouse;
+		private Warehouse _warehouse;
 		private List<Tuple<Patient, Motion>> _victims;
 		private List<Tuple<ThingModelEntity, LocationPilot>> _pilots;
 
@@ -37,11 +37,11 @@ namespace EmergencySituationSimulator2014
             Oracle.Generator = Random.fromSeed(appSettings["seed"]);
             double.TryParse(appSettings["areaRadius"], out Oracle.AreaRadius);
 
-			_wharehouse = new Wharehouse();
+			_warehouse = new Warehouse();
 	        
-			var thingModelClient = new Client(appSettings["senderID"], appSettings["connection"], _wharehouse);
+			var thingModelClient = new Client(appSettings["senderID"], appSettings["connection"], _warehouse);
 
-            var thingModelVisitor = new ThingModelVisitor(_wharehouse);
+            var thingModelVisitor = new ThingModelVisitor(_warehouse);
 			
 			thingModelClient.Send();
 
@@ -52,8 +52,8 @@ namespace EmergencySituationSimulator2014
 			registerTmr.Interval = 1000;
 			registerTmr.Elapsed += (sender, args) =>
 			{
-				_wharehouse.Events.OnNew += GenerateVictims;
-				_wharehouse.Events.OnNew += ManageRouting;
+				_warehouse.Events.OnNew += GenerateVictims;
+				_warehouse.Events.OnNew += ManageRouting;
 				registerTmr.Stop();
 			};
 			registerTmr.Start();
@@ -88,7 +88,7 @@ namespace EmergencySituationSimulator2014
 			Thread.Sleep(Timeout.Infinite);
 		}
 
-		private void GenerateVictims(object sender, WharehouseEvents.ThingEventArgs thingEventArgs)
+		private void GenerateVictims(object sender, WarehouseEvents.ThingEventArgs thingEventArgs)
 		{
 			var thing = thingEventArgs.Thing;
 
@@ -97,7 +97,7 @@ namespace EmergencySituationSimulator2014
 				return;
 			}
 
-			if (!thing.Type.Name.Contains(":incident:"))
+			if (!thing.Type.Name.Contains(":incident"))
 			{
 				return;	
 			}
@@ -132,7 +132,7 @@ namespace EmergencySituationSimulator2014
 			}
 		}
 		
-		private void ManageRouting(object sender, WharehouseEvents.ThingEventArgs thingEventArgs)
+		private void ManageRouting(object sender, WarehouseEvents.ThingEventArgs thingEventArgs)
 		{
 			var thing = thingEventArgs.Thing;
 

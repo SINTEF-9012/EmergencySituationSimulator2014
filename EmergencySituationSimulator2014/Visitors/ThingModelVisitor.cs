@@ -7,15 +7,15 @@ namespace EmergencySituationSimulator2014.Visitors
 {
 	class ThingModelVisitor : IVisitor
 	{
-		private Wharehouse _wharehouse;
+		private Warehouse _warehouse;
 		private ThingType _typeEntity;
 		private ThingType _typeWheeledVehicle;
 		private ThingType _typePatient;
 		private ThingType _typeZombie;
 
-		public ThingModelVisitor(Wharehouse wharehouse)
+		public ThingModelVisitor(Warehouse warehouse)
 		{
-			_wharehouse = wharehouse;
+			_warehouse = warehouse;
 
 			_typeEntity = BuildANewThingType.Named("ESS14:entity")
 				.WhichIs("EmergencySituationSimulator root thing")
@@ -37,10 +37,10 @@ namespace EmergencySituationSimulator2014.Visitors
 				.WhichIs("EmergencySituationSimulator wheeled vehicle")
 				.AndA.CopyOf(_typeEntity);
 
-			_wharehouse.RegisterType(_typeEntity);
-			_wharehouse.RegisterType(_typeWheeledVehicle);
-			_wharehouse.RegisterType(_typePatient);
-			_wharehouse.RegisterType(_typeZombie);
+			_warehouse.RegisterType(_typeEntity);
+			_warehouse.RegisterType(_typeWheeledVehicle);
+			_warehouse.RegisterType(_typePatient);
+			_warehouse.RegisterType(_typeZombie);
 		}
 
 		public BuildANewThing.ThingPropertyBuilder GenerateThing(Entity e, ThingType type)
@@ -56,7 +56,7 @@ namespace EmergencySituationSimulator2014.Visitors
 
 		public void Register(Thing thing)
 		{
-			_wharehouse.RegisterThing(thing);	
+			_warehouse.RegisterThing(thing);	
 		}
 
 		public void Visit(Entity e)
@@ -120,7 +120,7 @@ namespace EmergencySituationSimulator2014.Visitors
 		public void Visit(ThingModelEntity e)
 		{
 			// Just update the location
-			_wharehouse.NotifyThingUpdate(e.Thing);
+			_warehouse.NotifyThingUpdate(e.Thing,null);
 		}
 	}
 }

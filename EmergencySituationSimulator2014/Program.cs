@@ -46,7 +46,7 @@ namespace EmergencySituationSimulator2014
 
             int time = 250;
 
-	        Wharehouse wharehouse = new Wharehouse();
+	        Warehouse wharehouse = new Warehouse();
 
 	        var thingModelClient = new Client(appSettings["senderID"], appSettings["connection"], wharehouse);
 
