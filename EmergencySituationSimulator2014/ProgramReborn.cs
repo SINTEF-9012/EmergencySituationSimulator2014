@@ -21,6 +21,7 @@ namespace EmergencySituationSimulator2014
         private string[] _incidentObjectTypes;
         private Random _randomNumberGenerator;
         private LinksmartHandler _linksmartHandler;
+        private HereGeocoder _hereGeoCoder;
 
         public ProgramReborn(string hereAppId, string hereAppCode, string seed, string areaRadius, string senderID, string connection)
         {
@@ -50,6 +51,8 @@ namespace EmergencySituationSimulator2014
 
             // Set up randomizer
             _randomNumberGenerator = new Random();
+
+            _hereGeoCoder = new HereGeocoder(seed);
 		}
 
         public void StartIncidentSimulation(string seedOrigin, string seed, string amountOfObjects, string areaRadius, bool publishViaThingmodel)
