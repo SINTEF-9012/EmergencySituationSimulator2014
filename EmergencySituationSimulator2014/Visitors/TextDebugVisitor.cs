@@ -55,5 +55,26 @@ namespace EmergencySituationSimulator2014.Visitors
             Sb.Append(e.Name);
             Print();
 	    }
+
+        public void Visit(Incident i)
+        {
+            Sb.Append("Incident: ");
+            Sb.Append(i.Name);
+            Print();
+        }
+
+        public void Visit(ResourceAllocation r)
+        {
+            Sb.Append("ResourceAllocation: ");
+            Sb.Append(r.Name);
+            Print();
+        }
+
+        public void Visit(ChatMessage c)
+        {
+            Sb.Append("ChatMessage: ");
+            Sb.Append(c.Name);
+            Print();
+        }
     }
 }

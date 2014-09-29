@@ -39,7 +39,7 @@ namespace EmergencySituationSimulator2014
         }
         
         public static string CreatePersonName()
-        {
+        {            
             return Faker.Name.GetName();
         }
         

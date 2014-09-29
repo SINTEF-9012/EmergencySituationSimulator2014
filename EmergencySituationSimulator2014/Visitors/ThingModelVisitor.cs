@@ -12,6 +12,9 @@ namespace EmergencySituationSimulator2014.Visitors
 		private ThingType _typeWheeledVehicle;
 		private ThingType _typePatient;
 		private ThingType _typeZombie;
+        private ThingType _typeIncident;
+        private ThingType _typeResourceAllocation;
+        private ThingType _typeChatMessage;
 
 		public ThingModelVisitor(Warehouse warehouse)
 		{
@@ -37,10 +40,34 @@ namespace EmergencySituationSimulator2014.Visitors
 				.WhichIs("EmergencySituationSimulator wheeled vehicle")
 				.AndA.CopyOf(_typeEntity);
 
-			_warehouse.RegisterType(_typeEntity);
+            _typeIncident = BuildANewThingType.Named("incidentType")
+                .WhichIs("incident")
+                .AndA.CopyOf(_typeEntity)
+                .ContainingA.String("name")
+                .AndA.NotRequired.String("description");
+
+            _typeChatMessage = BuildANewThingType.Named("ChatMessageType")
+                .WhichIs("ChatMessage")
+                .ContainingA.String("author")
+		        .AndA.String("content") 
+		        .AndA.DateTime("datetime")
+		        .AndA.NotRequired.Int("number");
+
+            _typeResourceAllocation = BuildANewThingType.Named("master:order")
+		.WhichIs("Order")
+		.ContainingA.Location("location")
+		.AndA.String("task")
+		.AndA.NotRequired.String("description")
+		.AndA.Boolean("accepted")
+		.AndA.Boolean("done");
+
+			/*_warehouse.RegisterType(_typeEntity);
 			_warehouse.RegisterType(_typeWheeledVehicle);
 			_warehouse.RegisterType(_typePatient);
 			_warehouse.RegisterType(_typeZombie);
+            _warehouse.RegisterType(_typeIncident);
+            _warehouse.RegisterType(_typeResourceAllocation);
+            _warehouse.RegisterType(_typeChatMessage);*/
 		}
 
 		public BuildANewThing.ThingPropertyBuilder GenerateThing(Entity e, ThingType type)
@@ -70,6 +97,35 @@ namespace EmergencySituationSimulator2014.Visitors
 
 			Register(vehicle);
 		}
+
+        public void Visit(Incident i)
+        {
+            var incident = GenerateThing(i, _typeIncident);
+            incident.ContainingA.String("name", i.Name)
+                .AndA.String("description", i.Description);            
+            Register(incident);
+        }
+
+        public void Visit(ResourceAllocation r)
+        {
+            var resourceAllocation = BuildANewThing.As(_typeResourceAllocation)
+                .IdentifiedBy(r.Id)
+            .ContainingA.String("task", r.Task)
+                .AndA.String("resourceID", r.ResourceMobilizationID)
+                .AndA.Boolean("accepted", false)
+                .AndA.Boolean("done", false);            
+            Register(resourceAllocation);
+        }
+
+        public void Visit(ChatMessage c)
+        {
+            var chatMessage = BuildANewThing.As(_typeChatMessage)
+				.IdentifiedBy(c.Id)
+            .ContainingA.String("content", c.Message)
+                .AndA.String("author", c.Id)
+                .AndA.DateTime("datetime", DateTime.UtcNow);
+            Register(chatMessage);
+        }
 
 		public void Visit(Patient v)
 		{

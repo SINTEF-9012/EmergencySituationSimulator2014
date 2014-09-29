@@ -9,5 +9,8 @@ namespace EmergencySituationSimulator2014.Visitors
         void Visit(Patient v);
         void Visit(Zombie z);
         void Visit(ThingModelEntity e);
+        void Visit(Incident i);
+        void Visit(ResourceAllocation r);
+        void Visit(ChatMessage c);
     }
 }

@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5014DAA6-D776-4C1D-8AE0-02837C7F208E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EmergencySituationSimulator2014</RootNamespace>
     <AssemblyName>EmergencySituationSimulator2014</AssemblyName>
@@ -55,6 +55,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DataHandler, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>External assemblies\DataHandler.dll</HintPath>
+    </Reference>
     <Reference Include="FFaker.Net">
       <HintPath>packages\FFaker.Net.1.1.0.0\lib\net40\FFaker.Net.dll</HintPath>
     </Reference>
@@ -102,13 +106,17 @@
     <Compile Include="HereAPI\SearchResponseType.cs" />
     <Compile Include="HereAPI\SearchResponseViewType.cs" />
     <Compile Include="HereAPI\SearchResultType.cs" />
+    <Compile Include="LinksmartHandler.cs" />
     <Compile Include="LocationPilot.cs" />
+    <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\FireMan.cs" />
     <Compile Include="Model\FireTruck.cs" />
+    <Compile Include="Model\Incident.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\PoliceCar.cs" />
     <Compile Include="Model\PoliceMan.cs" />
     <Compile Include="Model\RescuePerson.cs" />
+    <Compile Include="Model\ResourceAllocation.cs" />
     <Compile Include="Model\ThingModelEntity.cs" />
     <Compile Include="Model\Vehicle.cs" />
     <Compile Include="Model\Patient.cs" />
